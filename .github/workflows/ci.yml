@@ -1,0 +1,72 @@
+name: Android Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  android-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      appium:
+        image: appium/appium
+        ports:
+          - 4723:4723
+        options: >-
+          --health-cmd="curl -f http://localhost:4723/wd/hub/status || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: 30
+          target: default
+          channel: stable
+
+      - name: Start Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: Nexus 6
+          script: |
+            adb shell settings put global window_animation_scale 0 &
+            adb shell settings put global transition_animation_scale 0 &
+            adb shell settings put global animator_duration_scale 0 &
+          disable-animations: true
+
+      - name: Wait for Emulator to Boot
+        run: adb wait-for-device
+
+      - name: Run Tests
+        env:
+          APPIUM_HOST: 'localhost'
+          APPIUM_PORT: 4723
+          BRAND: gfa  # Establece la marca aquí
+        run: |
+          yarn wdio
