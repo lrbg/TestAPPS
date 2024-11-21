@@ -1,20 +1,27 @@
 exports.config = {
     runner: 'local',
+    hostname: '127.0.0.1',
     port: 4723,
+    path:'/wd/hub',
     specs: ['./test/specs/**/*.js'],
     maxInstances: 1,
-    capabilities: [{
-        platformName: 'Android',
-        'appium:deviceName': 'emulator-5554',
-        'appium:automationName': 'UiAutomator2',
-        'appium:app': '/Users/luisrogelio/Documents/appium-tests/apk/gfa22112024.apk',
-        'appium:newCommandTimeout': 3600,
-        'appium:connectHardwareKeyboard': true
-    }],
+    capabilities: [
+        {
+            platformName: process.env.PLATFORM || 'Android',
+            'appium:deviceName': process.env.PLATFORM === 'ios' ? 'iPhone 16' : 'emulator-5554',
+            'appium:platformVersion': process.env.PLATFORM === 'ios' ? '18.0' : undefined, 
+            'appium:automationName': process.env.PLATFORM === 'ios' ? 'XCUITest' : 'UiAutomator2',
+            'appium:app': process.env.PLATFORM === 'ios'
+                ? 'https://appsreservamos2024r1.s3.us-east-2.amazonaws.com/gfa.app.zip' 
+                : 'https://appsreservamos2024r1.s3.us-east-2.amazonaws.com/gfa22112024.apk',
+            'appium:newCommandTimeout': 3600,
+            'appium:connectHardwareKeyboard': true
+        }
+    ],
     logLevel: 'info',
     bail: 0,
     waitforTimeout: 10000,
-    connectionRetryTimeout: 120000,
+    connectionRetryTimeout: 240000,
     connectionRetryCount: 3,
     services: [['appium', { args: { relaxedSecurity: true, port: 4723 } }]],
     framework: 'mocha',
@@ -23,13 +30,10 @@ exports.config = {
         ui: 'bdd',
         timeout: 60000
     },
-    
-    /**
-     * Captura el parámetro de marca y lo guarda como variable global
-     */
     before: function () {
-        const brand = process.env.BRAND || 'default'; // Captura BRAND desde las variables de entorno
+        const brand = process.env.BRAND || 'default';
         console.log(`Marca seleccionada en wdio.conf.js: ${brand}`);
         global.brand = brand;
+        global.platform = process.env.PLATFORM || 'Android';
     }
 };

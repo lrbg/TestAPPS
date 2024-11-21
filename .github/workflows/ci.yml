@@ -14,10 +14,12 @@ jobs:
 
     services:
       appium:
-        image: appium/appium
+        image: appium/appium:1.22.3 # Especifica una versión estable de Appium
         ports:
           - 4723:4723
         options: >-
+          --relaxed-security
+          --base-path /wd/hub
           --health-cmd="curl -f http://localhost:4723/wd/hub/status || exit 1"
           --health-interval=10s
           --health-timeout=5s
@@ -33,12 +35,7 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Set up JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: '11'
+        run: npm ci
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
@@ -54,14 +51,7 @@ jobs:
           target: default
           arch: x86_64
           profile: Nexus 6
-          script: |
-            adb shell settings put global window_animation_scale 0 &
-            adb shell settings put global transition_animation_scale 0 &
-            adb shell settings put global animator_duration_scale 0 &
           disable-animations: true
-
-      - name: Wait for Emulator to Boot
-        run: adb wait-for-device
 
       - name: Run Tests
         env:
