@@ -1,6 +1,6 @@
 exports.config = {
     runner: 'local',
-    hostname: '127.0.0.1',
+    hostname: 'testapps.up.railway.app',
     port: 4723,
     path:'/wd/hub',
     specs: ['./test/specs/**/*.js'],
