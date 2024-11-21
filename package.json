@@ -1,4 +1,13 @@
 {
+    "name": "appium-tests",
+    "version": "1.0.0",
+    "description": "Project for running Appium tests with WebdriverIO",
+    "main": "index.js",
+    "scripts": {
+      "wdio": "wdio run wdio.conf.js",
+      "test:android": "BRAND=default PLATFORM=android wdio run wdio.conf.js",
+      "test:ios": "BRAND=default PLATFORM=ios wdio run wdio.conf.js"
+    },
     "devDependencies": {
         "@wdio/appium-service": "^9.2.6",
         "@wdio/cli": "^9.2.5",
@@ -8,9 +17,7 @@
         "appium": "^2.12.1",
         "appium-uiautomator2-driver": "^3.8.0"
     },
-    "scripts": {
-        "wdio": "wdio run wdio.conf.js"
-    },
+    
     "dependencies": {
         "sharp": "^0.33.5"
     }
