@@ -4,7 +4,7 @@
     "description": "Project for running Appium tests with WebdriverIO",
     "main": "index.js",
     "scripts": {
-      "start": "appium",
+      "start": "appium --base-path /wd/hub --log-level info --port 4723",
       "wdio": "wdio run wdio.conf.js",
       "test:android": "BRAND=default PLATFORM=android wdio run wdio.conf.js",
       "test:ios": "BRAND=default PLATFORM=ios wdio run wdio.conf.js"
