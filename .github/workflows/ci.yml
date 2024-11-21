@@ -19,9 +19,9 @@ jobs:
           - 4723:4723
         options: >-
           --health-cmd="curl -f http://localhost:4723/wd/hub/status || exit 1"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+          --health-interval=15s
+          --health-timeout=10s
+          --health-retries=10
         env:
           APPIUM_RELAXED_SECURITY: 'true'
           APPIUM_BASE_PATH: '/wd/hub'
@@ -53,6 +53,12 @@ jobs:
           arch: x86_64
           profile: Nexus 6
           disable-animations: true
+
+      - name: Wait for Android Emulator to boot
+        run: adb wait-for-device
+
+      - name: Inspect Appium container logs
+        run: docker logs $(docker ps -q --filter "ancestor=appium/appium:latest")
 
       - name: Run Tests
         env:
