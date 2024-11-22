@@ -1,9 +1,10 @@
 exports.config = {
     runner: 'local',
-    hostname: 'testapps-production.up.railway.app', // URL pública de Railway
-    port: 443, // HTTPS
-    path: '/wd/hub',
-    specs: ['./test/specs/**/*.js'], // Ruta a tus archivos de prueba
+    hostname: 'testapps-production.up.railway.app', // Cambiar localhost por la URL de Railway
+    port: 443, // Puerto para HTTPS
+    path: '/wd/hub', // Ruta base de Appium
+    protocol: 'https', // Asegúrate de usar HTTPS
+    specs: ['./test/specs/**/*.js'], // Tus pruebas
     maxInstances: 1,
     capabilities: [
         {
